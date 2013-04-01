@@ -22,6 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MotionDetManager"
+            android:label="@string/md_title" >
+         </activity>
+         <service
+             android:enabled="true"
+             android:name=".AccelLoggerService">
+         </service>
     </application>
 
 </manifest>
