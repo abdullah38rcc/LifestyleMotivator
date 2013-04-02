@@ -2,11 +2,11 @@ package com.example.lifestylemotivator.provider;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class PlacesProvider {
 
@@ -22,19 +22,8 @@ public class PlacesProvider {
 		
 		String query = String.format("location=%s&radius=%s&types=%s&name=%s&sensor=%s&key=%s", location, radius, types, name, sensor, key);
 
-		URLConnection urlConnection = new URL(url).openConnection();
-		urlConnection.setUseCaches(false);
-		urlConnection.setDoOutput(true); // Triggers POST.
-		urlConnection.setRequestProperty("accept-charset", charset);
-		urlConnection.setRequestProperty("content-type", "application/x-www-form-urlencoded");
-
-		OutputStreamWriter writer = null;
-		try {
-		    writer = new OutputStreamWriter(urlConnection.getOutputStream(), charset);
-		    writer.write(query); // Write POST query string (if any needed).
-		} finally {
-		    if (writer != null) try { writer.close(); } catch (IOException logOrIgnore) {}
-		}
+		url = url + query;
+		HttpsURLConnection urlConnection = (HttpsURLConnection)new URL(url).openConnection();
 
 		InputStream result = urlConnection.getInputStream();
 	    java.util.Scanner s = new java.util.Scanner(result).useDelimiter("\\A");
