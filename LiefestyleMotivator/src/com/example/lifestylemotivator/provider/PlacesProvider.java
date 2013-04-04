@@ -16,16 +16,21 @@ import org.json.simple.parser.ParseException;
 import com.example.lifestylemotivator.models.PlaceModel;
 
 public class PlacesProvider {
+	
+	// radius in meters of the area to be searched (50000 is max that Places API allows for public use)
+	public final static String DEFAULT_RADIUS = "50000";
+	public final static String API_KEY = "AIzaSyCh_LKVI3HSiAhVVcyMpz7EXAGrgIvRhIY";
+	public final static String USING_SENSOR = "true";
 
-	public PlaceModel[] getPlaces() throws MalformedURLException, IOException {
+	public PlaceModel[] getPlaces(String latitude, String longitude, String types, String name) throws MalformedURLException, IOException {
 		String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 		String charset = "UTF-8";
-		String location = URLEncoder.encode("-33.8670522,151.1957362", charset);
-		String radius = URLEncoder.encode("500", charset);
-		String types = URLEncoder.encode("food", charset);
-		String name = URLEncoder.encode("harbour", charset);
-		String sensor = URLEncoder.encode("false", charset);
-		String key = URLEncoder.encode("AIzaSyCh_LKVI3HSiAhVVcyMpz7EXAGrgIvRhIY", charset);
+		String location = URLEncoder.encode(latitude + "," + longitude, charset);
+		String radius = URLEncoder.encode(PlacesProvider.DEFAULT_RADIUS, charset);
+		types = URLEncoder.encode(types, charset);
+		name = URLEncoder.encode(name, charset);
+		String sensor = URLEncoder.encode(PlacesProvider.USING_SENSOR, charset);
+		String key = URLEncoder.encode(PlacesProvider.API_KEY, charset);
 		
 		String query = String.format("location=%s&radius=%s&types=%s&name=%s&sensor=%s&key=%s", location, radius, types, name, sensor, key);
 

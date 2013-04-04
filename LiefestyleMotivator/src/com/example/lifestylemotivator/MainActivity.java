@@ -14,6 +14,7 @@ import org.w3c.dom.NodeList;
 
 
 import com.example.lifestylemotivator.R;
+import com.example.lifestylemotivator.models.PlaceModel;
 import com.example.lifestylemotivator.provider.PlacesProvider;
 
 import android.os.AsyncTask;
@@ -49,6 +50,18 @@ public class MainActivity extends ListActivity {
         cancelBtn.setEnabled(false);
         
         PlacesProvider p = new PlacesProvider();
+        // lol the app also should use open hours if it is to be called context aware
+        PlaceModel[] places = null;
+        try {
+        	// leave types an empty string if you do not want to filter by type
+        	places = p.getPlaces("35.787149", "-78.681137", "gym|park|stadium", "tennis");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         setListAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
