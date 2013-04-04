@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+
 import com.example.lifestylemotivator.R;
 import com.example.lifestylemotivator.provider.PlacesProvider;
 
@@ -35,8 +36,8 @@ public class MainActivity extends ListActivity {
 	private Button searchBtn;
 	private Button cancelBtn;
 	AddStringTask workerTask;
-	public static final int MENU_DEMO = Menu.FIRST + 1;
-	
+	public static final int MENU_PREFS = Menu.FIRST + 1;
+	public static final int MENU_DEMO = Menu.FIRST + 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +60,11 @@ public class MainActivity extends ListActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+    	menu.add(Menu.NONE, MENU_PREFS, Menu.NONE, "Setting");
     	menu.add(Menu.NONE, MENU_DEMO, Menu.NONE, "Demo");
-    	return(super.onCreateOptionsMenu(menu));  
+    	
+    	return(super.onCreateOptionsMenu(menu)); 
+    	
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -68,6 +72,10 @@ public class MainActivity extends ListActivity {
     		Intent i = new Intent(MainActivity.this, DemoActivity.class);
         	startActivityForResult(i, 0);
     		return true;
+    	}
+    	else if(item.getItemId() == MENU_PREFS) {
+    		startActivity(new Intent(MainActivity.this, EditPreferences.class));
+    		return(true);
     	}
     	return (super.onOptionsItemSelected(item));
     }

@@ -1,0 +1,16 @@
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+  <CheckBoxPreference
+    android:key="sensor_accel"
+    android:title="Enable Accelerometer"
+    android:summary="Use for detecting movement" />
+  <CheckBoxPreference
+    android:key="sensor_weather"
+    android:title="Enable Weather"
+    android:summary="Use for finding weather forecast" />
+  <CheckBoxPreference
+    android:key="sensor_location"
+    android:title="Enable Location"
+    android:summary="Use for detecting nearby facilities" />
+  
+</PreferenceScreen>

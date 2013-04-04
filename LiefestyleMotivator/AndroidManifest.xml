@@ -30,6 +30,8 @@
             android:name=".DemoActivity"
             android:label="@string/demo_activity_label">
         </activity>
+        <activity android:label="@string/app_name"
+              android:name=".EditPreferences"></activity>
     </application>
 
 </manifest>

@@ -18,6 +18,7 @@
      android:layout_height="wrap_content"
      android:layout_toRightOf="@id/temp_label"
      android:layout_alignParentTop="true"
+     android:inputType="number"
      android:padding="2px" />
     
      <EditText
@@ -26,6 +27,7 @@
          android:layout_height="wrap_content"
          android:layout_below="@+id/temp_entry"
          android:layout_toRightOf="@+id/accel_label"
+         android:inputType="number"
          android:padding="2px" />
 
      <TextView
