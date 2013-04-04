@@ -33,20 +33,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends ListActivity {	
+	AddStringTask workerTask;
+	LifestyleRuleEngine ruleEngine = new LifestyleRuleEngine();
+	
+	// UI related attributes
 	private Button searchBtn;
 	private Button cancelBtn;
-	AddStringTask workerTask;
 	public static final int MENU_PREFS = Menu.FIRST + 1;
 	public static final int MENU_DEMO = Menu.FIRST + 2;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        // Enable search by default and switch off cancel
         searchBtn = (Button) findViewById(R.id.search);
         cancelBtn = (Button)findViewById(R.id.cancel);
-        
         cancelBtn.setEnabled(false);
         
         PlacesProvider p = new PlacesProvider();
@@ -56,13 +60,12 @@ public class MainActivity extends ListActivity {
         	// leave types an empty string if you do not want to filter by type
         	places = p.getPlaces("35.787149", "-78.681137", "gym|park|stadium", "tennis");
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
+        // Display the result of the search
         setListAdapter(new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
                 new ArrayList<String>()));
@@ -71,6 +74,9 @@ public class MainActivity extends ListActivity {
         registerForContextMenu(getListView());
     }
 
+    // -------------------------------------------------------------------------------
+    // Menu Handlers
+    // -------------------------------------------------------------------------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	menu.add(Menu.NONE, MENU_PREFS, Menu.NONE, "Setting");
@@ -92,6 +98,11 @@ public class MainActivity extends ListActivity {
     	}
     	return (super.onOptionsItemSelected(item));
     }
+    
+    // -------------------------------------------------------------------------------
+    // Button Handlers.
+    // Wired to onClick in the xml file.
+    // -------------------------------------------------------------------------------
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent i) {
     	if(resultCode == RESULT_OK) {
@@ -114,31 +125,16 @@ public class MainActivity extends ListActivity {
     
     ArrayList<String> items=new ArrayList<String>();
     
-    
+    // ---------------------------------------------------------------------------------
+    // Worker Task.
+    // Do not want to block the UI thread while we collect the sensor data.
+    // ---------------------------------------------------------------------------------
     class AddStringTask extends AsyncTask<Void, String, Void> {
     	@Override
     	protected Void doInBackground(Void... unused) {
-    		try {
-    			InputStream in=getResources().openRawResource(R.raw.activities);
-    			DocumentBuilder builder=DocumentBuilderFactory
-    					.newInstance()
-    					.newDocumentBuilder();
-    			Document doc=builder.parse(in, null);
-    			NodeList activities=doc.getElementsByTagName("activity");
-
-    			for (int i=0;i<activities.getLength();i++) {
-    				items.add(((Element)activities.item(i)).getAttribute("value"));
-    			}
-
-    			in.close();
-    		}
-    		catch (Throwable t) {
-    		
-    		}
-
+    		items = ruleEngine.getActivites();
     		for (String item : items) {
     			publishProgress(item);
-    			SystemClock.sleep(200);
     		}
 
     		return(null);
@@ -158,5 +154,36 @@ public class MainActivity extends ListActivity {
         protected void onPostExecute(Void unused) {
         	cancelBtn.setEnabled(true);
         }
+      }
+    
+      // ---------------------------------------------------------------------------
+      // Our secret formula for using the context to order the list.
+      // Implements the set of rules for detecting favorable activities.
+      // ---------------------------------------------------------------------------
+      private class LifestyleRuleEngine {
+    	  /**
+    	   * Returns a  list of activities to do.
+    	   */
+    	  ArrayList<String> getActivites() {
+    		  ArrayList<String> activityList = new ArrayList<String>();
+    		  try {
+      			InputStream in=getResources().openRawResource(R.raw.activities);
+      			DocumentBuilder builder=DocumentBuilderFactory
+      					.newInstance()
+      					.newDocumentBuilder();
+      			Document doc=builder.parse(in, null);
+      			NodeList activities=doc.getElementsByTagName("activity");
+
+      			for (int i=0;i<activities.getLength();i++) {
+      				activityList.add(((Element)activities.item(i)).getAttribute("value"));
+      			}
+
+      			in.close();
+      		}
+      		catch (Throwable t) {
+      		
+      		}
+    		return activityList;
+    	  }
       }
 }
