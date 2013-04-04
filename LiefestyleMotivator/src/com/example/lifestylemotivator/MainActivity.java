@@ -12,7 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.example.liefestylemotivator.R;
+import com.example.lifestylemotivator.R;
 import com.example.lifestylemotivator.provider.PlacesProvider;
 
 import android.os.AsyncTask;
@@ -20,8 +20,10 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,6 +35,7 @@ public class MainActivity extends ListActivity {
 	private Button searchBtn;
 	private Button cancelBtn;
 	AddStringTask workerTask;
+	public static final int MENU_DEMO = Menu.FIRST + 1;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +54,32 @@ public class MainActivity extends ListActivity {
                 new ArrayList<String>()));
         workerTask = new AddStringTask();
         
-        
+        registerForContextMenu(getListView());
     }
 
-   
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	menu.add(Menu.NONE, MENU_DEMO, Menu.NONE, "Demo");
+    	return(super.onCreateOptionsMenu(menu));  
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	if(item.getItemId() == MENU_DEMO) {
+    		Intent i = new Intent(MainActivity.this, DemoActivity.class);
+        	startActivityForResult(i, 0);
+    		return true;
+    	}
+    	return (super.onOptionsItemSelected(item));
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent i) {
+    	if(resultCode == RESULT_OK) {
+    		Toast.makeText(getApplicationContext(), "Running Demo Mode", Toast.LENGTH_SHORT).show();
+    	}
+    	else {
+    		Toast.makeText(getApplicationContext(), "Running Normal Mode", Toast.LENGTH_SHORT).show();
+    	}
+    }
     public void searchActivities(View theButton) {
     	  searchBtn.setEnabled(false);
     	  workerTask.execute();
@@ -65,12 +90,7 @@ public class MainActivity extends ListActivity {
     	searchBtn.setEnabled(true);
     }
     
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+    
     ArrayList<String> items=new ArrayList<String>();
     
     

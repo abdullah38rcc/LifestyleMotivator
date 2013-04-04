@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+    
+    <TextView android:id="@+id/temp_label"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:text="Temprature (Celsius) "
+     android:layout_alignBaseline="@+id/temp_entry"
+     android:layout_alignParentLeft="true"
+     android:padding="2px" 
+     />
+    
+     <EditText android:id="@+id/temp_entry"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:layout_toRightOf="@id/temp_label"
+     android:layout_alignParentTop="true"
+     android:padding="2px" />
+    
+     <EditText
+         android:id="@+id/accel_entry"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/temp_entry"
+         android:layout_toRightOf="@+id/accel_label"
+         android:padding="2px" />
+
+     <TextView
+         android:id="@+id/accel_label"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBottom="@+id/accel_entry"
+         android:layout_alignParentLeft="true"
+         android:padding="2px"
+         android:text="AverageAccel (m/s2) " />
+
+     <Button
+         android:id="@+id/demo_set"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true"
+         android:layout_below="@+id/accel_entry"
+         android:onClick="demoSet"
+         android:text="Set" />
+
+     <Button
+         android:id="@+id/demo_cancel"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_below="@+id/accel_entry"
+         android:onClick="demoCancel"
+         android:text="Cancel" />
+     
+</RelativeLayout>
