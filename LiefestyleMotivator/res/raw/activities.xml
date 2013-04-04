@@ -1,4 +1,28 @@
 <activities>
-    <activity value="Play Tennis" /> 
-    <activity value="Exercise at the Gymn"/>
+    <activity 
+        min_temp="20" max_temp="30" buddies="2" facility="park" 
+        level="medium">
+        Play Tennis Game
+     </activity>
+          
+    <activity 
+        min_temp="-1" facility="gymn" level="low">
+        Exercise at the gymn
+    </activity>
+    
+    <activity
+        min_temp="20" max_temp="40" level="low">
+        Go for a slow walk
+    </activity>
+    
+    <activity
+        min_temp="20" max_temp="40" level="medium">
+        Go for a jog
+    </activity>
+    
+    <activity
+        min_temp="-1" level="high" buddies="2">
+        Play Badminton
+    </activity>
+    
 </activities>
