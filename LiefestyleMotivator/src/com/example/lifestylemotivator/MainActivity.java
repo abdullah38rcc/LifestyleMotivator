@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,11 +20,17 @@ import com.example.lifestylemotivator.R;
 import com.example.lifestylemotivator.models.PlaceModel;
 import com.example.lifestylemotivator.provider.PlacesProvider;
 
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -45,10 +53,19 @@ public class MainActivity extends ListActivity {
 	public static final int MENU_PREFS = Menu.FIRST + 1;
 	public static final int MENU_DEMO = Menu.FIRST + 2;
 
+	// Weather Service attributes
+	CityForecastBO weatherInfo;
+	String ZIP;
+	private double latitude;
+	private double longitude;
+	Location location;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		ZIP = "27560";
 
 		activityList = getActivityListFmXml();
 
@@ -119,6 +136,7 @@ public class MainActivity extends ListActivity {
 	public void searchActivities(View theButton) {
 		searchBtn.setEnabled(false);
 		new AddStringTask().execute();
+		new FindWeatherAsyncTask(this).execute(ZIP);
 	}
 	public void clearActivities(View theButton) {
 		cancelBtn.setEnabled(false);
@@ -240,4 +258,54 @@ public class MainActivity extends ListActivity {
 			return sortedList;  
 		}
 	}
+
+	// ------------------------------------------------------------------------------------------
+	// Weather Service 
+	//------------------------------------------------------------------------------------------
+	private String getCurrentLocation() {
+
+		LocationManager locationManager;
+		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+		final int geoLat = (int) (latitude * 1E6);
+		final int geoLong = (int) (longitude * 1E6);
+		Criteria crit = new Criteria();
+		crit.setAccuracy(Criteria.ACCURACY_COARSE);
+		String provider = locationManager.getBestProvider(crit, true);
+		Location loc = locationManager.getLastKnownLocation(provider);
+		latitude = loc.getLatitude();
+		longitude = loc.getLongitude();
+
+		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+		try {
+			List<Address> addresses = geocoder.getFromLocation(geoLat, geoLong, 10);
+			if(addresses != null && addresses.size() > 0 ) {
+				Address returnedAddress = addresses.get(0);
+				StringBuilder strReturnedAddress = new StringBuilder("Address:\n");
+				for(int i=0; i<returnedAddress.getMaxAddressLineIndex(); i++) {
+					strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+				}
+				System.out.println(strReturnedAddress.toString());
+			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+
+		return null;
+	}
+	public void setWeatherInfo(CityForecastBO info)
+	{
+		weatherInfo = info;
+	}
+
+	public CityForecastBO getWeatherInfo()
+	{
+
+		return weatherInfo;
+	}
+
 }
+
