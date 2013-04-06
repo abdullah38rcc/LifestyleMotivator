@@ -1,4 +1,4 @@
-package com.example.lifestylemotivator;
+package com.example.lifestylemotivator.provider;
 
 import java.io.IOException;
 
@@ -10,9 +10,11 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
+import com.example.lifestylemotivator.CityForecastBO;
+
 import android.util.Log;
 
-public class WeatherService {
+public class WeatherProvider {
 	private static final String TAG = "FINDWEATHER";
 	String NAMESPACE = "http://ws.cdyne.com/WeatherWS/";
     String METHOD_NAME = "GetCityWeatherByZIP";
