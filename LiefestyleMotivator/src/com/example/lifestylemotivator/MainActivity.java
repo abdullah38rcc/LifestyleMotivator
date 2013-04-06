@@ -5,8 +5,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,11 +16,12 @@ import org.w3c.dom.NodeList;
 
 import com.example.lifestylemotivator.R;
 import com.example.lifestylemotivator.models.PlaceModel;
+import com.example.lifestylemotivator.provider.LocationProvider;
 import com.example.lifestylemotivator.provider.PlacesProvider;
 
 import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;
+import android.location.Geocoder;ocation.Location;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -38,6 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +50,8 @@ public class MainActivity extends ListActivity {
 	// UI related attributes
 	private Button searchBtn;
 	private Button cancelBtn;
+	private PlacesProvider placeProvider;
+	private LocationProvider locationProvider;
 	public static final int MENU_PREFS = Menu.FIRST + 1;
 	public static final int MENU_DEMO = Menu.FIRST + 2;
 
@@ -74,17 +76,8 @@ public class MainActivity extends ListActivity {
 		cancelBtn = (Button)findViewById(R.id.cancel);
 		cancelBtn.setEnabled(false);
 
-		PlacesProvider p = new PlacesProvider();
-		// lol the app also should use open hours if it is to be called context aware
-		PlaceModel[] places = null;
-		try {
-			// leave types an empty string if you do not want to filter by type
-			places = p.getPlaces("35.787149", "-78.681137", "gym|park|stadium", "tennis");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		placeProvider = new PlacesProvider();
+		locationProvider = new LocationProvider(this);
 
 		// Display the result of the search
 		setListAdapter(new ArrayAdapter<String>(this,
@@ -135,8 +128,15 @@ public class MainActivity extends ListActivity {
 	}
 	public void searchActivities(View theButton) {
 		searchBtn.setEnabled(false);
-		new AddStringTask().execute();
+		EditText editText = (EditText)findViewById(R.id.entry);
+		String editTextStr = editText.getText().toString();
+		new AddStringTask().execute(editTextStr);
 		new FindWeatherAsyncTask(this).execute(ZIP);
+	public void searchActivities(View theButton) {
+		searchBtn.setEnabled(false);
+		EditText editText = (EditText)findViewById(R.id.entry);
+		String editTextStr = editText.getText().toString();
+		new AddStringTask().execute(editTextStr);
 	}
 	public void clearActivities(View theButton) {
 		cancelBtn.setEnabled(false);
@@ -151,10 +151,10 @@ public class MainActivity extends ListActivity {
 	// Worker Task.
 	// Do not want to block the UI thread while we collect the sensor data.
 	// ---------------------------------------------------------------------------------
-	class AddStringTask extends AsyncTask<Void, String, Void> {
+	class AddStringTask extends AsyncTask<String, String, Void> {
 		@Override
-		protected Void doInBackground(Void... unused) {
-			items = ruleEngine.getActivites();
+		protected Void doInBackground(String... query) {
+			items = ruleEngine.getActivites(query[0]);
 			for (String item : items) {
 				publishProgress(item);
 			}
@@ -237,7 +237,7 @@ public class MainActivity extends ListActivity {
 		/**
 		 * Returns a  list of activities to do.
 		 */
-		ArrayList<String> getActivites() {
+		ArrayList<String> getActivites(String query) {
 
 
 			Log.d("LifeStyleRuleEngine", "Running get activities");
@@ -252,9 +252,31 @@ public class MainActivity extends ListActivity {
 			}
 			Arrays.sort(pairArr);
 			ArrayList<String> sortedList = new ArrayList<String>();
-			for(int i = 0; i < activityList.size(); i++) {
-				sortedList.add(activityList.get(pairArr[i].index));
+			
+			PlaceModel[] places = null;
+			try {
+				Location location = locationProvider.getLocation();
+		    	Double latitude = 35.787149;
+		    	Double longitude = -78.681137;
+		    	if(location != null) {
+		    		latitude = location.getLatitude();
+		    		longitude = location.getLongitude();
+		    	}
+				// leave types an empty string if you do not want to filter by type
+				places = placeProvider.getPlaces(latitude.toString(), longitude.toString(), "gym|park|stadium", query);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
+			
+			for(PlaceModel p : places) {
+				sortedList.add(p.getName());
+			}
+//			for(int i = 0; i < activityList.size(); i++) {
+//				
+//				sortedList.add(activityList.get(pairArr[i].index));
+//			}
 			return sortedList;  
 		}
 	}
