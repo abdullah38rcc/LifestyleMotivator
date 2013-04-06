@@ -1,28 +1,54 @@
 <activities>
-    <activity 
-        min_temp="20" max_temp="30" buddies="2" facility="park" 
-        level="medium">
-        Play Tennis Game
-     </activity>
-          
-    <activity 
-        min_temp="-1" facility="gymn" level="low">
-        Exercise at the gymn
+    <activity value="Try playing tennis with $buddyName at $facilityName">
+      <buddy required="y"/>
+      <facility required="y" type="park"/>
+      <temp mean="20" stddev="1"/>
+      <humidity mean="20" stddev="1"/>
+      <windspeed mean="0" stddev="1"/>
+      <mood enhancing="y"/>
+      <keyword value="tennis"/>
+    </activity>
+
+    <activity value="Temp $temparture is ideal for running with $buddyName">
+      <buddy required="y"/>
+      <temp required="y" mean="20"/>
+      <humidity required="n" mean="10"/>
+      <phyical required="y" />
+      <windspeed required="n" mean="0"/>
+      <mood required="n" value="y"/>
+    </activity>
+
+    <activity value="Go running alone at wind of $windSpeed">
+      <temp required="n" mean="20"/>
+      <humidity required="n" value="10"/>
+      <windspeed required="y" value="0"/>
+      <mood enhancing="y"/>
+      <physical required="n" />
+      <mood enhancing="y" />
+    </activity>
+
+    <activity value="You are fit. Do weights in the gym at $facilityName">
+      <facility required="y" type="gym"/>
+      <mood enhancing="y"/>
+      <keyword value="gym"/>
+      <physical required="y" active="y" />
     </activity>
     
-    <activity
-        min_temp="20" max_temp="40" level="low">
-        Go for a slow walk
+    <activity value="Not doing much. Light Cardio in the gym at $facilityName">
+      <facility required="y" type="gym"/>
+      <mood enhancing="y"/>
+      <keyword value="gym"/>
     </activity>
-    
-    <activity
-        min_temp="20" max_temp="40" level="medium">
-        Go for a jog
+
+    <activity value="Temp is $temprature. Take a  hike at $facilityName with $buddyName">
+      <buddy required="y"/>
+      <temp required="y" mean="20"/>
+      <humidity required="n" mean="10"/>
+      <phyical required="y" />
+      <windspeed required="n" mean="0"/>
+      <mood required="n" value="y"/>
     </activity>
-    
-    <activity
-        min_temp="-1" level="high" buddies="2">
-        Play Badminton
+
+    <activity value="Hmm no idea on ctxt. Sometime important to just do something!!">
     </activity>
-    
 </activities>
