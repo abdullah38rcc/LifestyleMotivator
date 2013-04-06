@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="@string/md_mgr_text"
-        tools:context=".MotionDetManager" />
+        tools:context=".MotionDetProvider" />
 
     <Button
         android:id="@+id/md_button100"

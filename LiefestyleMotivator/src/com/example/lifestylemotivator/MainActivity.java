@@ -17,6 +17,7 @@ import org.w3c.dom.NodeList;
 
 
 import com.example.lifestylemotivator.R;
+import com.example.lifestylemotivator.models.CityForecastBO;
 import com.example.lifestylemotivator.models.PlaceModel;
 import com.example.lifestylemotivator.provider.LocationProvider;
 import com.example.lifestylemotivator.provider.PlacesProvider;

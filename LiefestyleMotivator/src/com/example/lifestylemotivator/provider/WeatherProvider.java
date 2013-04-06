@@ -10,7 +10,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
-import com.example.lifestylemotivator.CityForecastBO;
+import com.example.lifestylemotivator.models.CityForecastBO;
 
 import android.util.Log;
 

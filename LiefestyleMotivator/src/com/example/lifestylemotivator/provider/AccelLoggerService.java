@@ -1,4 +1,4 @@
-package com.example.liefestylemotivator;
+package com.example.lifestylemotivator.provider;
 
 import java.util.ArrayList;
 

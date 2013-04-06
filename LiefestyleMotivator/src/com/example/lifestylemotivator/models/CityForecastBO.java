@@ -1,4 +1,4 @@
-package com.example.lifestylemotivator;
+package com.example.lifestylemotivator.models;
 
 public class CityForecastBO {
 	boolean success;

@@ -1,4 +1,4 @@
-package com.example.liefestylemotivator;
+package com.example.lifestylemotivator.provider;
 
 import com.example.lifestylemotivator.R;
 
@@ -12,7 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class MotionDetManager extends Activity implements MotionDetInterface {
+public class MotionDetProvider extends Activity  {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,20 +63,6 @@ public class MotionDetManager extends Activity implements MotionDetInterface {
 		});
 	}
 
-	@Override
-	public boolean isPresent() {
-		return false;
-	}
-
-	@Override
-	public boolean isConfigured() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int getActivityLevel() {
-		return 0;
-	}
+	
 
 }
