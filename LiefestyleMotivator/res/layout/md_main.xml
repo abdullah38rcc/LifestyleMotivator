@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   
+    <TextView
+        android:id="@+id/mdView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/md_mgr_text"
+        tools:context=".MotionDetManager" />
+
+    <Button
+        android:id="@+id/md_button100"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/md_button1"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="89dp"
+        android:text="@string/md_button100_label" />
+
+    <Button
+        android:id="@+id/md_button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/md_button100"
+        android:layout_alignLeft="@+id/md_button100"
+        android:layout_marginBottom="56dp"
+        android:text="@string/md_button2_label" />
+
+    <Button
+        android:id="@+id/md_button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/md_button2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="42dp"
+        android:text="@string/md_button1_label" />
+
+    <TextView
+        android:id="@+id/mdView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/md_button1"
+        android:layout_marginBottom="45dp"
+        android:layout_toLeftOf="@+id/sampleSize"
+        android:text="@string/md_minutes" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/mdView2"
+        android:layout_below="@+id/mdView1"
+        android:layout_marginTop="15dp"
+        android:text="SampleSize" />
+
+    <EditText
+        android:id="@+id/mdPollPeriod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/mdView2"
+        android:ems="10"
+        android:inputType="number" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/sampleSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/textView1"
+        android:ems="10"
+        android:inputType="number" />
+
+</RelativeLayout>

@@ -4,5 +4,15 @@
     <string name="app_name">LifestyleMotivator</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Namaste world!</string>
-	<string name="demo_activity_label">Demo Settings</string>
+	  <string name="demo_activity_label">Demo Settings</string>
+    
+    <string name="md_mgr_label">Motion Detector Settings</string>
+    <string name="md_mgr_text">Configure Motion Detector</string>
+    
+    <string name="md_title">Properties</string>
+    <string name="md_minutes">Polling (Minutes)</string>
+    <string name="md_button1_label">Start Service</string>
+    <string name="md_button2_label">Stop Service</string>
+	<string name="md_button100_label">Main Activity</string>
+	
 </resources>

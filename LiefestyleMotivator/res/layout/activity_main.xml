@@ -5,8 +5,7 @@
   android:layout_height="fill_parent"
   android:stretchColumns="1">
   <TableRow>
-    <TextView
-        android:text="Keyword:" />
+    <TextView android:text="Keyword:" />
     <EditText android:id="@+id/entry"
       android:layout_span="3"/>
   </TableRow>
@@ -14,21 +13,25 @@
     android:layout_height="2dip"
     android:background="#0000FF" />
   <TableRow>
-    <Button android:id="@+id/cancel"
-      android:text="Cancel"
-      android:onClick="clearActivities"
-    />
+
+      <Button
+          android:id="@+id/cancel"
+          android:onClick="clearActivities"
+          android:text="Cancel" />
+
     <Button android:id="@+id/search"
       android:text="Search"
       android:onClick="searchActivities"
        />
   </TableRow>
-  <TableRow >
-      <ListView
-  		android:id="@android:id/list"
-  		android:layout_width="fill_parent" 
-  		android:layout_height="fill_parent"
-  		android:drawSelectorOnTop="false"
-	   />
+  <TableRow>
+    <ListView
+          android:id="@android:id/list"
+          android:drawSelectorOnTop="false"
+          android:layout_span="2" >
+      </ListView>
   </TableRow>
-</TableLayout>
+ </TableLayout>
+
+    
+ 
