@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,7 +23,7 @@ import com.example.lifestylemotivator.provider.PlacesProvider;
 
 import android.location.Address;
 import android.location.Criteria;
-import android.location.Geocoder;ocation.Location;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
@@ -126,12 +128,7 @@ public class MainActivity extends ListActivity {
 			Toast.makeText(getApplicationContext(), "Running Normal Mode", Toast.LENGTH_SHORT).show();
 		}
 	}
-	public void searchActivities(View theButton) {
-		searchBtn.setEnabled(false);
-		EditText editText = (EditText)findViewById(R.id.entry);
-		String editTextStr = editText.getText().toString();
-		new AddStringTask().execute(editTextStr);
-		new FindWeatherAsyncTask(this).execute(ZIP);
+	
 	public void searchActivities(View theButton) {
 		searchBtn.setEnabled(false);
 		EditText editText = (EditText)findViewById(R.id.entry);
