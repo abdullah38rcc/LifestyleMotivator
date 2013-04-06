@@ -1,5 +1,7 @@
 package com.example.liefestylemotivator;
 
+import com.example.lifestylemotivator.R;
+
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -74,7 +76,7 @@ public class MotionDetManager extends Activity implements MotionDetInterface {
 
 	@Override
 	public int getActivityLevel() {
-
+		return 0;
 	}
 
 }
