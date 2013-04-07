@@ -74,5 +74,4 @@ public class PlacesProvider {
 		return places;
 	}
 	
-	
 }

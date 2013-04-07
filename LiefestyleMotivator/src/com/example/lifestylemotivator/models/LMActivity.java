@@ -88,6 +88,15 @@ public String value;
 		if(ctxt.isBuddyValid) {
 			rslt = rslt.replaceAll("\\$buddyName", ctxt.buddyName);
 		}
+		if(ctxt.isTempratureValid) {
+			rslt = rslt.replaceAll("\\$temprature", String.valueOf(ctxt.temprature));
+		}
+		if(ctxt.isHumidityValid) {
+			rslt = rslt.replaceAll("\\$humidity", String.valueOf(ctxt.humidity));
+		}
+		if(ctxt.isWindSpeedValid) {
+			rslt = rslt.replaceAll("\\$windSpeed", String.valueOf(ctxt.windSpeed));
+		}
 		
 		this.value = rslt;
 	}
