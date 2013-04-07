@@ -95,6 +95,9 @@ public String value;
 		return super.clone();
 	}
 	
+	public String getValue() {
+		return value;
+	}
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		 String NEW_LINE = System.getProperty("line.separator");

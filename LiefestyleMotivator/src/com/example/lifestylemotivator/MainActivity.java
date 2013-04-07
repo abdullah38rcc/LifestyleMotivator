@@ -18,7 +18,9 @@ import org.w3c.dom.NodeList;
 
 import com.example.lifestylemotivator.R;
 import com.example.lifestylemotivator.models.CityForecastBO;
+import com.example.lifestylemotivator.models.LMActivity;
 import com.example.lifestylemotivator.models.LMActivityModel;
+import com.example.lifestylemotivator.models.LMCurrentCtxt;
 import com.example.lifestylemotivator.models.PlaceModel;
 import com.example.lifestylemotivator.provider.LocationProvider;
 import com.example.lifestylemotivator.provider.PlacesProvider;
@@ -51,7 +53,7 @@ public class MainActivity extends ListActivity {
 	// Attributes 
 	AddStringTask workerTask;
 	private LMActivityModel activityModel;
-	private ArrayList<String> activityList;
+	private ArrayList<LMActivity> activityList;
 	private PlacesProvider placeProvider;
 	private LocationProvider locationProvider;
 	
@@ -168,9 +170,8 @@ public class MainActivity extends ListActivity {
 		protected Void doInBackground(String... query) {
 			
 			// Call the model to fill the activityList.
-			for(int i = 0; i < 5; i++) {
-				activityList.add("Hello World");
-			}
+			LMCurrentCtxt ctxt = new LMCurrentCtxt();
+			activityList = activityModel.sortActivityLst(ctxt);
 			return null;
 			
 		}
@@ -183,7 +184,7 @@ public class MainActivity extends ListActivity {
 		@Override
 		protected void onPostExecute(Void unused) {
 			for(int i = 0; i < activityList.size(); i++) {
-				((ArrayAdapter)getListAdapter()).add(activityList.get(i));
+				((ArrayAdapter)getListAdapter()).add(activityList.get(i).getValue());
 			}
 			cancelBtn.setEnabled(true);
 			Log.d("WorkerThread", "Done with task.");
