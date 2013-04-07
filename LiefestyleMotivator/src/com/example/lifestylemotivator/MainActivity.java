@@ -18,6 +18,7 @@ import org.w3c.dom.NodeList;
 
 import com.example.lifestylemotivator.R;
 import com.example.lifestylemotivator.models.CityForecastBO;
+import com.example.lifestylemotivator.models.LMActivityModel;
 import com.example.lifestylemotivator.models.PlaceModel;
 import com.example.lifestylemotivator.provider.LocationProvider;
 import com.example.lifestylemotivator.provider.PlacesProvider;
@@ -34,6 +35,7 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,21 +48,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends ListActivity {	
+	// Attributes 
 	AddStringTask workerTask;
-	ArrayList<String> activityList;
-	LifestyleRuleEngine ruleEngine = new LifestyleRuleEngine();
-
+	private LMActivityModel activityModel;
+	private ArrayList<String> activityList;
+	private PlacesProvider placeProvider;
+	private LocationProvider locationProvider;
+	
 	// UI related attributes
 	private Button searchBtn;
 	private Button cancelBtn;
-	private PlacesProvider placeProvider;
-	private LocationProvider locationProvider;
 	public static final int MENU_PREFS = Menu.FIRST + 1;
 	public static final int MENU_DEMO = Menu.FIRST + 2;
 
 	// Weather Service attributes
 	CityForecastBO weatherInfo;
 	String ZIP;
+	
+	// Location based.
 	private double latitude;
 	private double longitude;
 	Location location;
@@ -72,7 +77,6 @@ public class MainActivity extends ListActivity {
 
 		ZIP = "27560";
 
-		activityList = getActivityListFmXml();
 
 		// Enable search by default and switch off cancel
 		searchBtn = (Button) findViewById(R.id.search);
@@ -89,6 +93,17 @@ public class MainActivity extends ListActivity {
 
 
 		registerForContextMenu(getListView());
+		
+		// Load the activities.
+		try {
+			InputStream in= getResources().openRawResource(R.raw.activities);
+			activityModel = new LMActivityModel();
+			activityModel.initFmXmlFile(in);
+			in.close();
+		}
+		catch(IOException t) {
+			t.printStackTrace();
+		}
 	}
 
 	// -------------------------------------------------------------------------------
@@ -134,16 +149,15 @@ public class MainActivity extends ListActivity {
 		searchBtn.setEnabled(false);
 		EditText editText = (EditText)findViewById(R.id.entry);
 		String editTextStr = editText.getText().toString();
+		// Start the async task.
 		new AddStringTask().execute(editTextStr);
 	}
+	
 	public void clearActivities(View theButton) {
 		cancelBtn.setEnabled(false);
 		((ArrayAdapter<String>)getListAdapter()).clear();
 		searchBtn.setEnabled(true);
 	}
-
-
-	ArrayList<String> items=new ArrayList<String>();
 
 	// ---------------------------------------------------------------------------------
 	// Worker Task.
@@ -152,18 +166,13 @@ public class MainActivity extends ListActivity {
 	class AddStringTask extends AsyncTask<String, String, Void> {
 		@Override
 		protected Void doInBackground(String... query) {
-			items = ruleEngine.getActivites(query[0]);
-			for (String item : items) {
-				publishProgress(item);
+			
+			// Call the model to fill the activityList.
+			for(int i = 0; i < 5; i++) {
+				activityList.add("Hello World");
 			}
-
-			return(null);
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		protected void onProgressUpdate(String... item) {
-			((ArrayAdapter<String>)getListAdapter()).add(item[0]);
+			return null;
+			
 		}
 
 		@Override
@@ -173,109 +182,11 @@ public class MainActivity extends ListActivity {
 		}
 		@Override
 		protected void onPostExecute(Void unused) {
+			for(int i = 0; i < activityList.size(); i++) {
+				((ArrayAdapter)getListAdapter()).add(activityList.get(i));
+			}
 			cancelBtn.setEnabled(true);
 			Log.d("WorkerThread", "Done with task.");
-		}
-	}
-
-	// ---------------------------------------------------------------------------
-	// Our secret formula for using the context to order the list.
-	// Implements the set of rules for detecting favorable activities.
-	// ---------------------------------------------------------------------------
-	// Helper class
-	class Pair implements Comparable {
-		int score;
-		int index;
-
-		public Pair(int s, int i) {
-			score = s;
-			index = i;
-		}
-
-		@Override
-		public int compareTo(Object arg0) {
-			int s = ((Pair)arg0).score;
-			return s > this.score ? -1 : s == this.score ? 0 : 1;
-		}
-
-	}
-	/**
-	 * Load the list of activites from xml file.
-	 * @return
-	 */
-	private ArrayList<String> getActivityListFmXml() {
-		ArrayList<String> lst = new ArrayList<String>();
-		try {
-			InputStream in=getResources().openRawResource(R.raw.activities);
-			DocumentBuilder builder=DocumentBuilderFactory
-					.newInstance()
-					.newDocumentBuilder();
-			Document doc=builder.parse(in, null);
-			NodeList activities=doc.getElementsByTagName("activity");
-
-			Log.d("NumActivities", Integer.toString(activities.getLength()));
-
-			for (int i=0;i<activities.getLength();i++) {
-				Element ele = (Element) activities.item(i);
-				//Log.d("Value", ele.getNodeValue());
-				//Log.d("Text", activities.item(i).getTextContent());
-				//activityList.add(ele.getNodeValue());
-				//Log.d("getActivities", "Adding actiivity");
-				lst.add(Integer.toString(i) + " hello world ");
-			}
-
-			in.close();
-		}
-		catch (Throwable t) {
-
-		}
-		return lst;
-	}
-	private class LifestyleRuleEngine {
-		/**
-		 * Returns a  list of activities to do.
-		 */
-		ArrayList<String> getActivites(String query) {
-
-
-			Log.d("LifeStyleRuleEngine", "Running get activities");
-
-			// Sort the activity list. Decorate-sort-Undecorate
-			Pair pairArr[] = new Pair[activityList.size()];
-			for(int i = 0; i < activityList.size(); i++) {
-				//TODO compute the score
-				int score = i;
-				//Store the result.
-				pairArr[i] = new Pair(score, i);
-			}
-			Arrays.sort(pairArr);
-			ArrayList<String> sortedList = new ArrayList<String>();
-			
-			PlaceModel[] places = null;
-			try {
-				Location location = locationProvider.getLocation();
-		    	Double latitude = 35.787149;
-		    	Double longitude = -78.681137;
-		    	if(location != null) {
-		    		latitude = location.getLatitude();
-		    		longitude = location.getLongitude();
-		    	}
-				// leave types an empty string if you do not want to filter by type
-				places = placeProvider.getPlaces(latitude.toString(), longitude.toString(), "gym|park|stadium", query);
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			for(PlaceModel p : places) {
-				sortedList.add(p.getName());
-			}
-//			for(int i = 0; i < activityList.size(); i++) {
-//				
-//				sortedList.add(activityList.get(pairArr[i].index));
-//			}
-			return sortedList;  
 		}
 	}
 
@@ -316,16 +227,7 @@ public class MainActivity extends ListActivity {
 
 		return null;
 	}
-	public void setWeatherInfo(CityForecastBO info)
-	{
-		weatherInfo = info;
-	}
-
-	public CityForecastBO getWeatherInfo()
-	{
-
-		return weatherInfo;
-	}
+	
 
 }
 
