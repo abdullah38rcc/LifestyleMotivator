@@ -67,10 +67,10 @@ public class MainActivity extends ListActivity {
 	CityForecastBO weatherInfo;
 	String ZIP;
 	
-	// Location based.
-	private double latitude;
-	private double longitude;
-	Location location;
+	// Location based
+	private static Double DefaultLatitude = 35.787149;
+	private static Double DefaultLongitude = -78.681137; 
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +85,16 @@ public class MainActivity extends ListActivity {
 		cancelBtn = (Button)findViewById(R.id.cancel);
 		cancelBtn.setEnabled(false);
 
-		placeProvider = new PlacesProvider();
-		locationProvider = new LocationProvider(this);
-
 		// Display the result of the search
 		setListAdapter(new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1,
 				new ArrayList<String>()));
 
-
 		registerForContextMenu(getListView());
+		
+		// Start the location services
+		locationProvider = new LocationProvider(this, DefaultLatitude, DefaultLongitude);
+		placeProvider = new PlacesProvider();
 		
 		// Load the activities.
 		try {
@@ -168,9 +168,32 @@ public class MainActivity extends ListActivity {
 	class AddStringTask extends AsyncTask<String, String, Void> {
 		@Override
 		protected Void doInBackground(String... query) {
+			// Get the last known location.
+			Location currLocation = locationProvider.getLocation();
+			
+			// Get the places from the last known location.
+			PlaceModel[] placesArr = null;
+			try {
+				placesArr = placeProvider.getPlaces(String.valueOf(currLocation.getLatitude()),
+												 				  String.valueOf(currLocation.getLongitude()),
+												 				  "gym|park|stadium", query[0]);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+			// Fill the current context.
+			LMCurrentCtxt ctxt = new LMCurrentCtxt();
+			if(placesArr != null && placesArr.length > 0) {
+				ctxt.facilityName = placesArr[0].getName();
+				ctxt.isFacilityValid = true;
+			}
 			
 			// Call the model to fill the activityList.
-			LMCurrentCtxt ctxt = new LMCurrentCtxt();
+			
 			activityList = activityModel.sortActivityLst(ctxt);
 			return null;
 			
@@ -198,9 +221,11 @@ public class MainActivity extends ListActivity {
 
 		LocationManager locationManager;
 		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
+			
+		final int geoLat = 0;
+		final int geoLong = 0;
 		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
+/*
 		final int geoLat = (int) (latitude * 1E6);
 		final int geoLong = (int) (longitude * 1E6);
 		Criteria crit = new Criteria();
@@ -209,7 +234,7 @@ public class MainActivity extends ListActivity {
 		Location loc = locationManager.getLastKnownLocation(provider);
 		latitude = loc.getLatitude();
 		longitude = loc.getLongitude();
-
+*/
 		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
 		try {
 			List<Address> addresses = geocoder.getFromLocation(geoLat, geoLong, 10);
