@@ -23,6 +23,7 @@ import com.example.lifestylemotivator.models.LMActivityModel;
 import com.example.lifestylemotivator.models.LMCurrentCtxt;
 import com.example.lifestylemotivator.models.PlaceModel;
 import com.example.lifestylemotivator.provider.LocationProvider;
+import com.example.lifestylemotivator.provider.MotionDetProvider;
 import com.example.lifestylemotivator.provider.PlacesProvider;
 import com.example.lifestylemotivator.provider.WeatherProvider;
 
@@ -64,10 +65,9 @@ public class MainActivity extends ListActivity {
 	private Button cancelBtn;
 	public static final int MENU_PREFS = Menu.FIRST + 1;
 	public static final int MENU_DEMO = Menu.FIRST + 2;
-
+	public static final int MENU_SERVICES = Menu.FIRST + 3;
+	
 	// Default attributes
-	// Weather based
-	private static String DefaultZipCode = "27650";
 	// Location based
 	private static Double DefaultLatitude = 35.787149;
 	private static Double DefaultLongitude = -78.681137; 
@@ -116,7 +116,7 @@ public class MainActivity extends ListActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.add(Menu.NONE, MENU_PREFS, Menu.NONE, "Setting");
 		menu.add(Menu.NONE, MENU_DEMO, Menu.NONE, "Demo");
-
+		menu.add(Menu.NONE, MENU_SERVICES, Menu.NONE, "Services");
 		return(super.onCreateOptionsMenu(menu)); 
 
 	}
@@ -130,6 +130,11 @@ public class MainActivity extends ListActivity {
 		else if(item.getItemId() == MENU_PREFS) {
 			startActivity(new Intent(MainActivity.this, EditPreferences.class));
 			return(true);
+		}
+		else if(item.getItemId() == MENU_SERVICES) {
+			Intent i = new Intent(MainActivity.this, MotionDetProvider.class);
+			startActivityForResult(i, 0);
+			return true;
 		}
 		return (super.onOptionsItemSelected(item));
 	}
@@ -187,7 +192,16 @@ public class MainActivity extends ListActivity {
 			}
 		
 			// Get the current weather
-			CityForecastBO forecast = weatherProvider.getWeatherForecast();
+			CityForecastBO forecast = null;
+			try {
+				forecast = weatherProvider.getWeatherForecast(locationProvider.getPostalCode());
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			// Fill the current context.
 			LMCurrentCtxt ctxt = new LMCurrentCtxt();

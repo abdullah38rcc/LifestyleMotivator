@@ -28,7 +28,7 @@ public class WeatherProvider {
     private String URL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx";
   
 	
-	public CityForecastBO getWeatherForecast() {
+	public CityForecastBO getWeatherForecast(String zipCode) {
 		// 1. Create SOAP Envelope 
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		// 2. Set the request parameters
@@ -38,7 +38,7 @@ public class WeatherProvider {
 		PropertyInfo pi = new PropertyInfo();
 		pi.setNamespace("http://ws.cdyne.com/WeatherWS/"); 
 		pi.setName("ZIP");
-		pi.setValue(getZipCode());
+		pi.setValue(zipCode);
 		Request.addProperty(pi);
 
 		envelope.dotNet = true;
@@ -106,8 +106,5 @@ public class WeatherProvider {
         return cityForecastResult;
     }
 	
-	private String getZipCode() {
-		return "27650";
-		
-	}
+	
 }
