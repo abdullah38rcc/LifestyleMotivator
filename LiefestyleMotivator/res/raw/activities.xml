@@ -18,13 +18,12 @@
       <mood required="n" value="y"/>
     </activity>
 
-    <activity value="Go running alone at wind of $windSpeed">
-      <temp required="n" mean="20"/>
+    <activity value="Go running alone at temp of $temprature F">
+      <temp required="y" mean="20"/>
       <humidity required="n" value="10"/>
-      <windspeed required="y" value="0"/>
-      <mood enhancing="y"/>
+      <windspeed required="n" value="0"/>
       <physical required="n" />
-      <mood enhancing="y" />
+      <mood enhancing="n" />
     </activity>
 
     <activity value="You are fit. Do weights in the gym at $facilityName">
@@ -49,6 +48,6 @@
       <mood required="n" value="y"/>
     </activity>
 
-    <activity value="Hmm no idea on ctxt. Sometime important to just do something!!">
+    <activity value="By default sometime just do something!!">
     </activity>
 </activities>
