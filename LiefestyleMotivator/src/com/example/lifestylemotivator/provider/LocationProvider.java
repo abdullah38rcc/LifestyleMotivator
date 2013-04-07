@@ -1,5 +1,22 @@
 package com.example.lifestylemotivator.provider;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import com.example.lifestylemotivator.models.PlaceModel;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -38,6 +55,50 @@ public class LocationProvider implements LocationListener {
     		location.setLongitude(defaultLongitude);
     	}
 		return location;
+    }
+    
+    public String getPostalCode() throws MalformedURLException, IOException {
+    	String url = "http://maps.googleapis.com/maps/api/geocode/json?";
+		String charset = "UTF-8";
+		Location loc = this.getLocation();
+		String location = URLEncoder.encode(loc.getLatitude() + "," + loc.getLongitude(), charset);
+		String query = String.format("latlng=%s&sensor=true", location);
+
+		url = url + query;
+		HttpURLConnection urlConnection = (HttpURLConnection)new URL(url).openConnection();
+
+		InputStream result = urlConnection.getInputStream();
+	    java.util.Scanner s = new java.util.Scanner(result).useDelimiter("\\A");
+	    String response = s.hasNext() ? s.next() : "";
+	    
+	    JSONObject json = null;
+	    
+	    try {
+			json = (JSONObject)new JSONParser().parse(response);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	    JSONArray results = (JSONArray) json.get("results");
+	    JSONObject firstMatch = (JSONObject) results.get(0);
+	    
+		JSONArray components = (JSONArray) firstMatch.get("address_components");
+		String postalCode = null;
+		int i = 0;
+		for(Object o : components) {
+			JSONObject object = (JSONObject) o;
+			JSONArray types = (JSONArray) object.get("types");
+			for(Object t : types) {
+				String type = (String) t;
+				if(type.equals("postal_code")) {
+					return (String) object.get("long_name");
+				}
+			}
+		}
+		
+		
+		return postalCode;
     }
     
     public boolean isGpsEnabled() {
