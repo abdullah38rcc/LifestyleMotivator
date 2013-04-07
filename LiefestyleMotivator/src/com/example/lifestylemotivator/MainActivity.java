@@ -36,8 +36,10 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources.NotFoundException;
 import android.util.Log;
 import android.view.Menu;
@@ -70,7 +72,9 @@ public class MainActivity extends ListActivity {
 	// Location based
 	private static Double DefaultLatitude = 35.787149;
 	private static Double DefaultLongitude = -78.681137; 
-	
+	//Motion service
+	MyBroadcastRcvr myBroadcastRcvr;
+	boolean myBroadcastRcvrRegistered = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +110,30 @@ public class MainActivity extends ListActivity {
 		catch(IOException t) {
 			t.printStackTrace();
 		}
+		// Motion services
+		myBroadcastRcvr = new MyBroadcastRcvr();
 	}
-
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if(!myBroadcastRcvrRegistered) {
+			Log.d("MotionService:", "Register the bast receiver");
+			registerReceiver(myBroadcastRcvr, new IntentFilter("com.example.lifestylemotivator.SOME_MESSAGE"));
+			myBroadcastRcvrRegistered = true;
+		}
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		if(myBroadcastRcvrRegistered) {
+			Log.d("MotionService:", "Unregister the bast receiver");
+			unregisterReceiver(myBroadcastRcvr);
+			myBroadcastRcvrRegistered = false;
+		}
+ 		
+	}
 	// -------------------------------------------------------------------------------
 	// Menu Handlers
 	// -------------------------------------------------------------------------------
@@ -144,12 +170,7 @@ public class MainActivity extends ListActivity {
 	// -------------------------------------------------------------------------------
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent i) {
-		if(resultCode == RESULT_OK) {
-			Toast.makeText(getApplicationContext(), "Running Demo Mode", Toast.LENGTH_SHORT).show();
-		}
-		else {
-			Toast.makeText(getApplicationContext(), "Running Normal Mode", Toast.LENGTH_SHORT).show();
-		}
+		
 	}
 	
 	public void searchActivities(View theButton) {
@@ -232,6 +253,20 @@ public class MainActivity extends ListActivity {
 			cancelBtn.setEnabled(true);
 			Log.d("WorkerThread", "Done with task.");
 		}
+	}
+	// -------------------------------------------------------------------
+	// Accerlerometer Service
+	// ----------------------------------------------------------------
+	class MyBroadcastRcvr extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context arg0, Intent intent) {
+			// TODO Auto-generated method stub
+			Log.d("BroadcastReciever", "Got the message");
+			String action = intent.getAction();
+			
+		}
+		
 	}
 
 }

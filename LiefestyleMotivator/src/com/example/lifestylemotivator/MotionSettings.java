@@ -36,12 +36,15 @@ public class MotionSettings extends Activity  {
 						AlarmManager.INTERVAL_FIFTEEN_MINUTES, scheduledIntent);
 				Log.d("AccelLogger", "Starting the service alarm");
 				startService(intent);
-				statusActive = true;
+				Button start = (Button) findViewById(R.id.md_button1);
+				start.setEnabled(false);
+				Button stop = (Button) findViewById(R.id.md_button2);
+				stop.setEnabled(true);
 			}
 		});
 
 		Button stop = (Button) findViewById(R.id.md_button2);
-		stop.setEnabled(!statusActive);
+		stop.setEnabled(false);
 		stop.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -52,7 +55,10 @@ public class MotionSettings extends Activity  {
 				PendingIntent scheduledIntent = PendingIntent.getService(getApplicationContext(), 
 						0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 				scheduler.cancel(scheduledIntent);
-				statusActive = false;
+				Button start = (Button) findViewById(R.id.md_button1);
+				start.setEnabled(true);
+				Button stop = (Button) findViewById(R.id.md_button2);
+				stop.setEnabled(false);
 				Log.d("AccelLogger", "Stop the service alarm");
 			}
 		});

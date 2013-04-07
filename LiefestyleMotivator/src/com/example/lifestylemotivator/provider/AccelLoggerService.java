@@ -38,6 +38,7 @@ public class AccelLoggerService extends Service implements SensorEventListener {
 		sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
 		Log.d(DEBUG_TAG, "Starting service.");
 		highPassCount = 0;
+		
 		return START_STICKY;
 		
 	}
@@ -48,25 +49,15 @@ public class AccelLoggerService extends Service implements SensorEventListener {
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		// grab the values and timestamp -- off the main thread
-		new SensorEventLoggerTask().execute(event);
-		// stop the service
-		stopSelf();
-		Log.d(DEBUG_TAG, "Stopping service.");
+		double f = computeAccel(event);
+		if(f < RUN_THRESHHOLD) {
+			sampleWindow.pushValue(f);
+		}
+		Intent i = new Intent("com.example.lifestylemotivator.SOME_MESSAGE");
+		i.putExtra("AverageAccel", sampleWindow.avg);
+		sendBroadcast(i);
 	}
 	
-	private class SensorEventLoggerTask extends AsyncTask<SensorEvent, Void, Void> {
-		
-		@Override
-		protected Void doInBackground(SensorEvent... arg0) {
-			double f = computeAccel(arg0[0]);
-			if(f < RUN_THRESHHOLD) {
-				sampleWindow.pushValue(f);
-			}
-			
-			return null;
-		}
-	}
 	/**
 	 * Compute the acceleration from the sensors in m/s2.
 	 * @param event
