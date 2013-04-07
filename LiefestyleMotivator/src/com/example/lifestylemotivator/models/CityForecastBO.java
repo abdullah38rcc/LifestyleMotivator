@@ -35,5 +35,9 @@ public class CityForecastBO {
 		this.remarks = remarks2;
 
 	}
+	
+	public float getTemprature() {
+		return Float.parseFloat(this.temperature);
+	}
 
 }

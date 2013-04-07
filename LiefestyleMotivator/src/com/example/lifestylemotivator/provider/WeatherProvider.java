@@ -1,6 +1,8 @@
 package com.example.lifestylemotivator.provider;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -12,17 +14,21 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import com.example.lifestylemotivator.models.CityForecastBO;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.LocationManager;
 import android.util.Log;
 
 public class WeatherProvider {
 	private static final String TAG = "FINDWEATHER";
-	String NAMESPACE = "http://ws.cdyne.com/WeatherWS/";
-    String METHOD_NAME = "GetCityWeatherByZIP";
-    String SOAP_ACTION = "http://ws.cdyne.com/WeatherWS/GetCityWeatherByZIP";
-    String URL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx";
+	private String NAMESPACE = "http://ws.cdyne.com/WeatherWS/";
+    private String METHOD_NAME = "GetCityWeatherByZIP";
+    private String SOAP_ACTION = "http://ws.cdyne.com/WeatherWS/GetCityWeatherByZIP";
+    private String URL = "http://wsf.cdyne.com/WeatherWS/Weather.asmx";
   
 	
-	public CityForecastBO getWeatherForecast(String... urls) {
+	public CityForecastBO getWeatherForecast() {
 		// 1. Create SOAP Envelope 
 		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 		// 2. Set the request parameters
@@ -32,7 +38,7 @@ public class WeatherProvider {
 		PropertyInfo pi = new PropertyInfo();
 		pi.setNamespace("http://ws.cdyne.com/WeatherWS/"); 
 		pi.setName("ZIP");
-		pi.setValue("27560");
+		pi.setValue(getZipCode());
 		Request.addProperty(pi);
 
 		envelope.dotNet = true;
@@ -99,5 +105,9 @@ public class WeatherProvider {
 
         return cityForecastResult;
     }
-
+	
+	private String getZipCode() {
+		return "27650";
+		
+	}
 }

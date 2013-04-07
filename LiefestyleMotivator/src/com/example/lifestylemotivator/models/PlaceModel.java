@@ -6,7 +6,8 @@ public class PlaceModel {
 	private String[] type;
 	private String latitude;
 	private String longitude;
-
+	private String zipCode;
+	
 	public String getName() {
 		return name;
 	}
@@ -30,6 +31,12 @@ public class PlaceModel {
 	}
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
+	}
+	public String getZipCode() {
+		return this.zipCode;
+	}
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
 	}
 
 }

@@ -55,18 +55,24 @@ public class PlacesProvider {
 		int i = 0;
 		for(Object o : results) {
 			JSONObject place = (JSONObject) o;
+			
 			places[i] = new PlaceModel();
 			places[i].setName((String) place.get("name"));
+			
 			JSONArray placeTypes = (JSONArray) place.get("types");
 			String[] typesArray = (String[]) placeTypes.toArray(new String[placeTypes.size()]);
 			places[i].setType(typesArray);
+			
 			JSONObject geometry = (JSONObject) place.get("geometry");
 			JSONObject loc = (JSONObject) geometry.get("location");
 			places[i].setLatitude(loc.get("lat").toString());
 			places[i].setLongitude(loc.get("lng").toString());
+
 			i = i + 1;
 		}
 		
 		return places;
 	}
+	
+	
 }

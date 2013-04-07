@@ -24,6 +24,7 @@ import com.example.lifestylemotivator.models.LMCurrentCtxt;
 import com.example.lifestylemotivator.models.PlaceModel;
 import com.example.lifestylemotivator.provider.LocationProvider;
 import com.example.lifestylemotivator.provider.PlacesProvider;
+import com.example.lifestylemotivator.provider.WeatherProvider;
 
 import android.location.Address;
 import android.location.Criteria;
@@ -56,6 +57,7 @@ public class MainActivity extends ListActivity {
 	private ArrayList<LMActivity> activityList;
 	private PlacesProvider placeProvider;
 	private LocationProvider locationProvider;
+	private WeatherProvider weatherProvider;
 	
 	// UI related attributes
 	private Button searchBtn;
@@ -63,10 +65,9 @@ public class MainActivity extends ListActivity {
 	public static final int MENU_PREFS = Menu.FIRST + 1;
 	public static final int MENU_DEMO = Menu.FIRST + 2;
 
-	// Weather Service attributes
-	CityForecastBO weatherInfo;
-	String ZIP;
-	
+	// Default attributes
+	// Weather based
+	private static String DefaultZipCode = "27650";
 	// Location based
 	private static Double DefaultLatitude = 35.787149;
 	private static Double DefaultLongitude = -78.681137; 
@@ -76,9 +77,6 @@ public class MainActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		ZIP = "27560";
-
 
 		// Enable search by default and switch off cancel
 		searchBtn = (Button) findViewById(R.id.search);
@@ -95,6 +93,9 @@ public class MainActivity extends ListActivity {
 		// Start the location services
 		locationProvider = new LocationProvider(this, DefaultLatitude, DefaultLongitude);
 		placeProvider = new PlacesProvider();
+		
+		// Weather provider
+		weatherProvider = new WeatherProvider();
 		
 		// Load the activities.
 		try {
@@ -185,13 +186,19 @@ public class MainActivity extends ListActivity {
 				e.printStackTrace();
 			}
 		
+			// Get the current weather
+			CityForecastBO forecast = weatherProvider.getWeatherForecast();
+			
 			// Fill the current context.
 			LMCurrentCtxt ctxt = new LMCurrentCtxt();
 			if(placesArr != null && placesArr.length > 0) {
 				ctxt.facilityName = placesArr[0].getName();
 				ctxt.isFacilityValid = true;
 			}
-			
+			if(forecast != null) {
+				ctxt.isTempratureValid = true;
+				ctxt.temprature = forecast.getTemprature();
+			}
 			// Call the model to fill the activityList.
 			
 			activityList = activityModel.sortActivityLst(ctxt);
@@ -213,47 +220,6 @@ public class MainActivity extends ListActivity {
 			Log.d("WorkerThread", "Done with task.");
 		}
 	}
-
-	// ------------------------------------------------------------------------------------------
-	// Weather Service 
-	//------------------------------------------------------------------------------------------
-	private String getCurrentLocation() {
-
-		LocationManager locationManager;
-		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-			
-		final int geoLat = 0;
-		final int geoLong = 0;
-		//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-/*
-		final int geoLat = (int) (latitude * 1E6);
-		final int geoLong = (int) (longitude * 1E6);
-		Criteria crit = new Criteria();
-		crit.setAccuracy(Criteria.ACCURACY_COARSE);
-		String provider = locationManager.getBestProvider(crit, true);
-		Location loc = locationManager.getLastKnownLocation(provider);
-		latitude = loc.getLatitude();
-		longitude = loc.getLongitude();
-*/
-		Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-		try {
-			List<Address> addresses = geocoder.getFromLocation(geoLat, geoLong, 10);
-			if(addresses != null && addresses.size() > 0 ) {
-				Address returnedAddress = addresses.get(0);
-				StringBuilder strReturnedAddress = new StringBuilder("Address:\n");
-				for(int i=0; i<returnedAddress.getMaxAddressLineIndex(); i++) {
-					strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
-				}
-				System.out.println(strReturnedAddress.toString());
-			}
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-
-		return null;
-	}
-	
 
 }
 

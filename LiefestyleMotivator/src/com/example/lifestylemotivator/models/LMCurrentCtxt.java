@@ -2,13 +2,13 @@ package com.example.lifestylemotivator.models;
 
 public class LMCurrentCtxt {
 	public boolean isTempratureValid = false;
-	float temprature;
+	public float temprature;
 	
 	public boolean isWindSpeedValid = false;
-	float windSpeed;
+	public float windSpeed;
 	
 	public boolean isHumidityValid = false;
-	float humidity;
+	public float humidity;
 	
 	public boolean isFacilityValid = false;
 	public String facilityName;
