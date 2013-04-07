@@ -23,7 +23,6 @@ import com.example.lifestylemotivator.models.LMActivityModel;
 import com.example.lifestylemotivator.models.LMCurrentCtxt;
 import com.example.lifestylemotivator.models.PlaceModel;
 import com.example.lifestylemotivator.provider.LocationProvider;
-import com.example.lifestylemotivator.provider.MotionDetProvider;
 import com.example.lifestylemotivator.provider.PlacesProvider;
 import com.example.lifestylemotivator.provider.WeatherProvider;
 
@@ -132,7 +131,7 @@ public class MainActivity extends ListActivity {
 			return(true);
 		}
 		else if(item.getItemId() == MENU_SERVICES) {
-			Intent i = new Intent(MainActivity.this, MotionDetProvider.class);
+			Intent i = new Intent(MainActivity.this, MotionSettings.class);
 			startActivityForResult(i, 0);
 			return true;
 		}

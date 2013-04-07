@@ -34,7 +34,7 @@
               android:name=".EditPreferences">
          </activity>
           <activity android:label="@string/app_name"
-              android:name=".MotionDetProvider">
+              android:name=".MotionSettings">
          </activity>
          <service
              android:enabled="true"
